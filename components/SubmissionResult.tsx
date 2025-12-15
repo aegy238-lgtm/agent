@@ -16,6 +16,7 @@ export const SubmissionResult: React.FC<SubmissionResultProps> = ({ data, genera
   const isRTL = lang === 'ar';
 
   // Construct the full message text with a professional layout using Emojis
+  // NOTE: The generated letter section has been removed as per request.
   const fullMessage = `📋 *${t.title}*
 
 🏢 *${t.agencyName}:* ${data.agencyName}
@@ -26,9 +27,6 @@ export const SubmissionResult: React.FC<SubmissionResultProps> = ({ data, genera
 👤 *بيانات الإدارة:*
 • ${t.adminName}: ${data.adminName}
 • ${t.adminId}: ${data.adminId}
-
-📜 *${t.letterTitle}:*
-${generatedLetter}
 
 ✨ *تنويه هام:*
 ${t.whatsappFooter}`;
