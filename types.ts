@@ -23,7 +23,8 @@ export interface AppConfig {
   contactWhatsapp: string;
   contactEmail: string;
   adminPassword: string;
-  customFooterText: string; // New field for footer text override
+  customFooterText: string;
+  defaultCountryCode: string; // New field for automatic whatsapp formatting
   showFields: {
     agencyName: boolean;
     agentId: boolean;

@@ -50,7 +50,9 @@ export const translations = {
     changePassword: "تغيير كلمة المرور",
     currentPassword: "الحالية: ",
     
-    footerTextLabel: "نص التذييل (حقوق النشر)"
+    footerTextLabel: "نص التذييل (حقوق النشر)",
+    defaultCountryCodeLabel: "كود الدولة الافتراضي (للواتساب)",
+    defaultCountryCodePlaceholder: "مثال: 966"
   },
   en: {
     title: "New Agency Registration",
@@ -101,7 +103,9 @@ export const translations = {
     changePassword: "Change Password",
     currentPassword: "Current: ",
     
-    footerTextLabel: "Footer Copyright Text"
+    footerTextLabel: "Footer Copyright Text",
+    defaultCountryCodeLabel: "Default Country Code (WhatsApp)",
+    defaultCountryCodePlaceholder: "Ex: 966"
   },
   hi: {
     title: "नई एजेंसी पंजीकरण",
@@ -152,6 +156,8 @@ export const translations = {
     changePassword: "पासवर्ड बदलें",
     currentPassword: "वर्तमान: ",
     
-    footerTextLabel: "फुटर कॉपीराइट टेक्स्ट"
+    footerTextLabel: "फुटर कॉपीराइट टेक्स्ट",
+    defaultCountryCodeLabel: "डिफ़ॉल्ट देश कोड (व्हाट्सएप)",
+    defaultCountryCodePlaceholder: "उदाहरण: 966"
   }
 };

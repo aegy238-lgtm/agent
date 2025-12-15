@@ -42,6 +42,7 @@ const DEFAULT_CONFIG: AppConfig = {
   contactEmail: '',
   adminPassword: '123456', // Default Password
   customFooterText: '', 
+  defaultCountryCode: '966', // Default Saudi Arabia
   showFields: {
     agencyName: true,
     agentId: true,

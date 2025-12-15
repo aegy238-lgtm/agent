@@ -137,6 +137,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdate, onClos
             </h3>
             <div className="space-y-3">
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.defaultCountryCodeLabel}</label>
+                <input
+                  type="text"
+                  name="defaultCountryCode"
+                  value={config.defaultCountryCode || '966'}
+                  onChange={handleTextChange}
+                  placeholder={t.defaultCountryCodePlaceholder}
+                  className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+                  dir="ltr"
+                />
+                <p className="text-xs text-gray-500 mt-1">يتم إضافته تلقائياً إذا أدخل المستخدم الرقم بدون كود دولي.</p>
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">رقم الواتساب لاستقبال الطلبات</label>
                 <input
                   type="text"
