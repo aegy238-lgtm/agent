@@ -1,6 +1,6 @@
 import React from 'react';
 import { AgencyFormData, AppConfig, Language } from '../types';
-import { CheckCircle, Copy, FileText, Mail, MessageCircle } from 'lucide-react';
+import { CheckCircle, Copy, FileText, Mail, MessageCircle, Eye } from 'lucide-react';
 import { translations } from '../utils/translations';
 
 interface SubmissionResultProps {
@@ -15,8 +15,26 @@ export const SubmissionResult: React.FC<SubmissionResultProps> = ({ data, genera
   const t = translations[lang];
   const isRTL = lang === 'ar';
 
+  // Construct the full message text with a professional layout using Emojis
+  const fullMessage = `📋 *${t.title}*
+
+🏢 *${t.agencyName}:* ${data.agencyName}
+🌍 *${t.country}:* ${data.country}
+🆔 *${t.agentId}:* ${data.agentId}
+📱 *${t.whatsapp}:* ${data.whatsapp}
+
+👤 *بيانات الإدارة:*
+• ${t.adminName}: ${data.adminName}
+• ${t.adminId}: ${data.adminId}
+
+📜 *${t.letterTitle}:*
+${generatedLetter}
+
+✨ *تنويه هام:*
+${t.whatsappFooter}`;
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(generatedLetter);
+    navigator.clipboard.writeText(fullMessage);
     alert(t.copied);
   };
 
@@ -26,27 +44,8 @@ export const SubmissionResult: React.FC<SubmissionResultProps> = ({ data, genera
       return;
     }
 
-    // Since we now capture the correct country code and number in the form,
-    // the data.whatsapp string is already in the format "+966 5XXXXXXXX"
-    // We just need to strip the plus sign and spaces for the link.
     const cleanNumber = config.contactWhatsapp.replace(/[^\d]/g, '');
-
-    const message = `*${t.title}*
----------------------------
-*${t.agencyName}:* ${data.agencyName}
-*${t.country}:* ${data.country}
-*${t.agentId}:* ${data.agentId}
-*${t.whatsapp}:* ${data.whatsapp}
-*${t.adminName}:* ${data.adminName} (ID: ${data.adminId})
----------------------------
-
-*${t.letterTitle}:*
-${generatedLetter}
-
----------------------------
-${t.whatsappFooter}`;
-
-    const url = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(fullMessage)}`;
     window.open(url, '_blank');
   };
 
@@ -57,21 +56,7 @@ ${t.whatsappFooter}`;
     }
 
     const subject = `${t.title}: ${data.agencyName}`;
-    const body = `${t.agencyInfo}:
----------------------------
-${t.agencyName}: ${data.agencyName}
-${t.country}: ${data.country}
-${t.agentId}: ${data.agentId}
-${t.whatsapp}: ${data.whatsapp}
-${t.adminName}: ${data.adminName}
-${t.adminId}: ${data.adminId}
-
----------------------------
-${t.letterTitle}:
-${generatedLetter}
-`;
-
-    const url = `mailto:${config.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const url = `mailto:${config.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fullMessage)}`;
     window.open(url, '_blank');
   };
 
@@ -87,23 +72,24 @@ ${generatedLetter}
         <p className="text-gray-600">{t.successMessage}</p>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-        <div className="bg-primary-600 p-4 flex items-center justify-between text-white">
-          <div className="flex items-center gap-2">
-            <FileText className="w-5 h-5" />
-            <h3 className="font-bold text-lg">{t.letterTitle}</h3>
+      {/* Message Preview Section */}
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+        <div className="bg-gray-100/80 p-4 flex items-center justify-between border-b border-gray-200">
+          <div className="flex items-center gap-2 text-gray-700">
+            <Eye className="w-5 h-5" />
+            <h3 className="font-bold text-lg">{t.whatsappPreview}</h3>
           </div>
           <button 
             onClick={handleCopy}
-            className="flex items-center gap-1 bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-sm transition-colors"
+            className="flex items-center gap-1 bg-white hover:bg-gray-50 px-3 py-1.5 rounded-lg text-sm transition-colors border shadow-sm text-gray-600"
           >
             <Copy className="w-4 h-4" />
             <span>{t.copy}</span>
           </button>
         </div>
-        <div className="p-6 bg-gray-50">
-          <div className="prose prose-lg max-w-none text-start whitespace-pre-wrap text-gray-800 leading-relaxed font-medium">
-            {generatedLetter}
+        <div className="p-6 bg-gray-50/50">
+          <div className="whitespace-pre-wrap text-start text-gray-800 leading-relaxed font-medium bg-white p-4 rounded-xl border border-gray-200 shadow-sm text-sm md:text-base font-mono">
+            {fullMessage}
           </div>
         </div>
       </div>
@@ -113,7 +99,7 @@ ${generatedLetter}
         {config.contactWhatsapp && (
           <button
             onClick={handleWhatsApp}
-            className="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-xl shadow-md transition-all hover:shadow-xl hover:-translate-y-1"
+            className="flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-4 rounded-xl shadow-md transition-all hover:shadow-xl hover:-translate-y-1"
           >
             <MessageCircle className="w-6 h-6" />
             {t.sendWhatsapp}

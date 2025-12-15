@@ -54,7 +54,8 @@ export const translations = {
     defaultCountryCodeLabel: "كود الدولة الافتراضي (للواتساب)",
     defaultCountryCodePlaceholder: "مثال: 966",
     
-    whatsappFooter: "عزيزي الوكيل انتظر تفعيل الوكاله وسوف يتم انشاء لك جروب وتكمله بيانات الوكاله"
+    whatsappFooter: "عزيزي الوكيل، تم استلام طلبك مبدئياً. يرجى انتظار تفعيل الوكالة، وسيتم التواصل معكم لإنشاء مجموعة عمل لاستكمال باقي الإجراءات والبيانات.",
+    whatsappPreview: "معاينة الرسالة التي سيتم إرسالها"
   },
   en: {
     title: "New Agency Registration",
@@ -109,7 +110,8 @@ export const translations = {
     defaultCountryCodeLabel: "Default Country Code (WhatsApp)",
     defaultCountryCodePlaceholder: "Ex: 966",
     
-    whatsappFooter: "Dear Agent, please wait for agency activation. A group will be created for you to complete the agency details."
+    whatsappFooter: "Dear Agent, your request has been received. Please wait for agency activation. A group will be created for you to complete the remaining procedures.",
+    whatsappPreview: "Preview of the message to be sent"
   },
   hi: {
     title: "नई एजेंसी पंजीकरण",
@@ -164,6 +166,7 @@ export const translations = {
     defaultCountryCodeLabel: "डिफ़ॉल्ट देश कोड (व्हाट्सएप)",
     defaultCountryCodePlaceholder: "उदाहरण: 966",
     
-    whatsappFooter: "प्रिय एजेंट, कृपया एजेंसी सक्रियण की प्रतीक्षा करें। आपके लिए एक समूह बनाया जाएगा और एजेंसी का विवरण पूरा किया जाएगा।"
+    whatsappFooter: "प्रिय एजेंट, आपका अनुरोध प्राप्त हो गया है। कृपया एजेंसी सक्रियण की प्रतीक्षा करें। आपके लिए एक समूह बनाया जाएगा और बाकी प्रक्रिया पूरी की जाएगी।",
+    whatsappPreview: "भेजे जाने वाले संदेश का पूर्वावलोकन"
   }
 };
