@@ -1,19 +1,20 @@
 import React from 'react';
 import { AppConfig, Language } from '../types';
 import { translations } from '../utils/translations';
+import { ARAB_COUNTRIES } from '../utils/countries';
 import { Save, Upload, Layout, Type, Eye, Image as ImageIcon, X, Mail, MessageCircle, Lock, Key } from 'lucide-react';
 
 interface AdminPanelProps {
   config: AppConfig;
   onUpdate: (newConfig: AppConfig) => void;
   onClose: () => void;
-  lang?: Language; // Optional prop for translation access inside panel
+  lang?: Language;
 }
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdate, onClose, lang = 'ar' }) => {
   const t = translations[lang];
   
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     onUpdate({ ...config, [e.target.name]: e.target.value });
   };
 
@@ -138,16 +139,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ config, onUpdate, onClos
             <div className="space-y-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">{t.defaultCountryCodeLabel}</label>
-                <input
-                  type="text"
+                <select
                   name="defaultCountryCode"
-                  value={config.defaultCountryCode || '966'}
+                  value={config.defaultCountryCode}
                   onChange={handleTextChange}
-                  placeholder={t.defaultCountryCodePlaceholder}
-                  className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+                  className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-green-500 bg-white"
                   dir="ltr"
-                />
-                <p className="text-xs text-gray-500 mt-1">يتم إضافته تلقائياً إذا أدخل المستخدم الرقم بدون كود دولي.</p>
+                >
+                  {ARAB_COUNTRIES.map((country) => (
+                    <option key={country.code} value={country.dial_code.replace('+', '')}>
+                      {country.flag} {country.name} ({country.dial_code})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">يتم تحديده كافتراضي للمستخدم في الصفحة الرئيسية.</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">رقم الواتساب لاستقبال الطلبات</label>

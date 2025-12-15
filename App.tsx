@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AgencyFormData, FormError, AppConfig, Language } from './types';
 import { translations } from './utils/translations';
+import { ARAB_COUNTRIES } from './utils/countries';
 import { InputField } from './components/InputField';
 import { SubmissionResult } from './components/SubmissionResult';
 import { AdminPanel } from './components/AdminPanel';
@@ -58,10 +59,12 @@ function App() {
   const [config, setConfig] = useState<AppConfig>(DEFAULT_CONFIG);
   const [loadingConfig, setLoadingConfig] = useState(true);
   const [lang, setLang] = useState<Language>('ar');
+  const [countryCode, setCountryCode] = useState('966');
   const t = translations[lang];
 
   // Form states
   const [formData, setFormData] = useState<AgencyFormData>(initialData);
+  const [submissionData, setSubmissionData] = useState<AgencyFormData>(initialData); // Stores the final data including full phone
   const [errors, setErrors] = useState<Partial<Record<keyof AgencyFormData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -80,7 +83,11 @@ function App() {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setConfig(docSnap.data() as AppConfig);
+          const data = docSnap.data() as AppConfig;
+          setConfig(data);
+          if (data.defaultCountryCode) {
+            setCountryCode(data.defaultCountryCode);
+          }
         } else {
           // If no config exists in DB, save default
           await setDoc(docRef, DEFAULT_CONFIG);
@@ -90,7 +97,11 @@ function App() {
         console.error("Error fetching config:", error);
         // Fallback to local storage if Firebase fails
         const saved = localStorage.getItem('agencyAppConfig');
-        if (saved) setConfig(JSON.parse(saved));
+        if (saved) {
+           const parsed = JSON.parse(saved);
+           setConfig(parsed);
+           if (parsed.defaultCountryCode) setCountryCode(parsed.defaultCountryCode);
+        }
       } finally {
         setLoadingConfig(false);
       }
@@ -152,14 +163,26 @@ function App() {
     setIsSubmitting(true);
 
     try {
+      // Create final data object with full phone number
+      // Remove leading zero from local number if it exists when combining with code
+      const localPhone = formData.whatsapp.startsWith('0') ? formData.whatsapp.substring(1) : formData.whatsapp;
+      const fullPhone = `+${countryCode} ${localPhone}`;
+      
+      const finalData = {
+        ...formData,
+        whatsapp: fullPhone
+      };
+      
+      setSubmissionData(finalData);
+
       // 1. Generate Letter AI
-      const letter = await generateFormalRequest(formData, lang);
+      const letter = await generateFormalRequest(finalData, lang);
       setGeneratedLetter(letter);
 
       // 2. Save Request to Firebase
       try {
         await addDoc(collection(db, "requests"), {
-          ...formData,
+          ...finalData,
           letter: letter,
           createdAt: serverTimestamp(),
           status: 'pending',
@@ -380,16 +403,52 @@ function App() {
                   )}
 
                   {config.showFields.whatsapp && (
-                    <InputField
-                      label={t.whatsapp}
-                      name="whatsapp"
-                      value={formData.whatsapp}
-                      onChange={handleChange}
-                      error={errors.whatsapp}
-                      placeholder={t.whatsappPlaceholder}
-                      type="tel"
-                      icon={<Phone className="w-4 h-4" />}
-                    />
+                    <div className="mb-4">
+                      <label htmlFor="whatsapp" className="block text-sm font-medium text-blue-50 mb-1.5 text-start">
+                        {t.whatsapp}
+                      </label>
+                      <div className="relative flex gap-2" dir="ltr">
+                        {/* Country Code Selector */}
+                        <div className="relative w-1/3 md:w-1/4">
+                          <select
+                            value={countryCode}
+                            onChange={(e) => setCountryCode(e.target.value)}
+                            className="w-full h-full py-3 px-2 rounded-lg border border-white/20 focus:border-primary-400 focus:ring-primary-500/30 bg-white/90 focus:bg-white text-gray-900 focus:ring-2 focus:outline-none transition-colors duration-200 appearance-none text-center font-bold"
+                          >
+                            {ARAB_COUNTRIES.map((country) => (
+                              <option key={country.code} value={country.dial_code.replace('+', '')}>
+                                {country.flag} {country.dial_code}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {/* Phone Input */}
+                        <div className="relative w-2/3 md:w-3/4">
+                          <input
+                            type="tel"
+                            id="whatsapp"
+                            name="whatsapp"
+                            value={formData.whatsapp}
+                            onChange={handleChange}
+                            placeholder={t.whatsappPlaceholder}
+                            className={`
+                              w-full py-3 rounded-lg border text-start text-gray-900
+                              focus:ring-2 focus:outline-none transition-colors duration-200
+                              pl-10 pr-4
+                              ${errors.whatsapp
+                                ? 'border-red-300 focus:border-red-500 focus:ring-red-200 bg-red-50' 
+                                : 'border-white/20 focus:border-primary-400 focus:ring-primary-500/30 bg-white/90 focus:bg-white'
+                              }
+                            `}
+                          />
+                          <div className="absolute top-1/2 transform -translate-y-1/2 text-gray-500 left-3">
+                            <Phone className="w-4 h-4" />
+                          </div>
+                        </div>
+                      </div>
+                      {errors.whatsapp && <p className="mt-1 text-sm text-red-300 text-start font-medium">{errors.whatsapp}</p>}
+                    </div>
                   )}
 
                   {/* Admin Section */}
@@ -460,7 +519,7 @@ function App() {
           </div>
         ) : (
           <SubmissionResult 
-            data={formData} 
+            data={submissionData} 
             generatedLetter={generatedLetter}
             config={config}
             onReset={handleReset}

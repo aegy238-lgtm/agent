@@ -26,28 +26,10 @@ export const SubmissionResult: React.FC<SubmissionResultProps> = ({ data, genera
       return;
     }
 
-    // --- Phone Number Formatting Logic ---
-    let phone = config.contactWhatsapp.replace(/[^\d+]/g, ''); // Remove spaces, dashes, parens
-    
-    // Clean leading '+' for processing check, but we need raw digits for calculation
-    let rawDigits = phone.replace('+', '');
-    
-    const defaultCode = (config.defaultCountryCode || '966').replace('+', '');
-
-    // Logic: If the number does NOT start with the default country code
-    if (!rawDigits.startsWith(defaultCode)) {
-      // If it starts with '0', remove the '0' and add the code (e.g., 050... -> 96650...)
-      if (rawDigits.startsWith('0')) {
-        rawDigits = defaultCode + rawDigits.substring(1);
-      } else {
-        // If it's just the local number (e.g. 50...), prepend the code
-        rawDigits = defaultCode + rawDigits;
-      }
-    }
-
-    // Final formatted number for wa.me link (no plus sign usually preferred)
-    const finalPhone = rawDigits; 
-    // -------------------------------------
+    // Since we now capture the correct country code and number in the form,
+    // the data.whatsapp string is already in the format "+966 5XXXXXXXX"
+    // We just need to strip the plus sign and spaces for the link.
+    const cleanNumber = config.contactWhatsapp.replace(/[^\d]/g, '');
 
     const message = `*${t.title}*
 ---------------------------
@@ -61,7 +43,7 @@ export const SubmissionResult: React.FC<SubmissionResultProps> = ({ data, genera
 *${t.letterTitle}:*
 ${generatedLetter}`;
 
-    const url = `https://wa.me/${finalPhone}?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
 
