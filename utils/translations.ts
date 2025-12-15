@@ -52,7 +52,9 @@ export const translations = {
     
     footerTextLabel: "نص التذييل (حقوق النشر)",
     defaultCountryCodeLabel: "كود الدولة الافتراضي (للواتساب)",
-    defaultCountryCodePlaceholder: "مثال: 966"
+    defaultCountryCodePlaceholder: "مثال: 966",
+    
+    whatsappFooter: "عزيزي الوكيل انتظر تفعيل الوكاله وسوف يتم انشاء لك جروب وتكمله بيانات الوكاله"
   },
   en: {
     title: "New Agency Registration",
@@ -105,7 +107,9 @@ export const translations = {
     
     footerTextLabel: "Footer Copyright Text",
     defaultCountryCodeLabel: "Default Country Code (WhatsApp)",
-    defaultCountryCodePlaceholder: "Ex: 966"
+    defaultCountryCodePlaceholder: "Ex: 966",
+    
+    whatsappFooter: "Dear Agent, please wait for agency activation. A group will be created for you to complete the agency details."
   },
   hi: {
     title: "नई एजेंसी पंजीकरण",
@@ -158,6 +162,8 @@ export const translations = {
     
     footerTextLabel: "फुटर कॉपीराइट टेक्स्ट",
     defaultCountryCodeLabel: "डिफ़ॉल्ट देश कोड (व्हाट्सएप)",
-    defaultCountryCodePlaceholder: "उदाहरण: 966"
+    defaultCountryCodePlaceholder: "उदाहरण: 966",
+    
+    whatsappFooter: "प्रिय एजेंट, कृपया एजेंसी सक्रियण की प्रतीक्षा करें। आपके लिए एक समूह बनाया जाएगा और एजेंसी का विवरण पूरा किया जाएगा।"
   }
 };

@@ -41,7 +41,10 @@ export const SubmissionResult: React.FC<SubmissionResultProps> = ({ data, genera
 ---------------------------
 
 *${t.letterTitle}:*
-${generatedLetter}`;
+${generatedLetter}
+
+---------------------------
+${t.whatsappFooter}`;
 
     const url = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
